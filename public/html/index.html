@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ser Sustentável 🌿</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="leaves-background" id="leaves-bg">
+        <div class="leaf leaf-1"></div><div class="leaf leaf-2"></div><div class="leaf leaf-3"></div><div class="leaf leaf-4"></div><div class="leaf leaf-5"></div>
+    </div>
+
+    <div class="notification-toast-container" id="toast-container"></div>
+
+    <section class="auth-section" id="login-screen">
+        <button class="icon-action-btn floating-theme-btn theme-toggle-btn" title="Alternar Tema">
+            <i class="fa-solid fa-sun theme-icon"></i>
+        </button>
+
+        <div class="auth-card glass-panel fade-in">
+            <div class="auth-header">
+                <div class="logo-container">
+                    <span class="logo-icon">🌿</span>
+                    <h1 class="logo-title">Ser <span>Sustentável</span></h1>
+                </div>
+                <p class="auth-subtitle">Acesso à plataforma.</p>
+            </div>
+            
+            <form id="login-form" class="auth-form" novalidate>
+                <div class="form-group">
+                    <label for="login-email"><i class="fa-solid fa-envelope"></i> E-mail</label>
+                    <input type="email" id="login-email" placeholder="digite seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password"><i class="fa-solid fa-lock"></i> Senha</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" placeholder="digite sua senha" required>
+                        <button type="button" class="toggle-password" id="toggle-login-pass">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="btn-login-submit">
+                    <span>Acessar Conta <i class="fa-solid fa-arrow-right-to-bracket"></i></span>
+                </button>
+            </form>
+            <div class="auth-footer">
+                <p>Novo por aqui? <button class="link-btn" id="go-to-register-btn">Crie sua conta</button></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="auth-section hidden" id="register-screen">
+        <button class="icon-action-btn floating-theme-btn theme-toggle-btn" title="Alternar Tema">
+            <i class="fa-solid fa-sun theme-icon"></i>
+        </button>
+
+        <div class="auth-card glass-panel fade-in">
+            <div class="auth-header">
+                <div class="logo-container">
+                    <span class="logo-icon">🌿</span>
+                    <h1 class="logo-title">Ser <span>Sustentável</span></h1>
+                </div>
+                <p class="auth-subtitle">Crie sua conta ecológica.</p>
+            </div>
+            
+            <form id="register-form" class="auth-form" novalidate>
+                <div class="form-group">
+                    <label for="reg-name"><i class="fa-solid fa-user"></i> Nome Completo</label>
+                    <input type="text" id="reg-name" placeholder="como gostaria de ser chamado" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email"><i class="fa-solid fa-envelope"></i> E-mail</label>
+                    <input type="email" id="reg-email" placeholder="seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-dob"><i class="fa-solid fa-calendar-days"></i> Data de Nascimento</label>
+                    <input type="date" id="reg-dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-password"><i class="fa-solid fa-lock"></i> Senha</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="reg-password" placeholder="mínimo 6 caracteres (letras e números)" required>
+                        <button type="button" class="toggle-password" id="toggle-reg-pass">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm-password"><i class="fa-solid fa-shield-halved"></i> Confirmar Senha</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="reg-confirm-password" placeholder="repita sua senha" required>
+                        <button type="button" class="toggle-password" id="toggle-reg-confirm-pass">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="btn-register-submit">
+                    <span>Cadastrar <i class="fa-solid fa-leaf"></i></span>
+                </button>
+            </form>
+            <div class="auth-footer">
+                <p>Já possui conta? <button class="link-btn" id="go-to-login-btn">Fazer Login</button></p>
+            </div>
+        </div>
+    </section>
+
+    <main class="app-container hidden" id="main-app">
+        <header class="app-header glass-panel">
+            <div class="app-header-left">
+                <span class="logo-icon-sm">🌿</span>
+                <span class="app-logo-text">Ser<span>Sustentável</span></span>
+            </div>
+            
+            <nav class="app-nav">
+                <button class="nav-btn active" id="nav-feed-btn"><i class="fa-solid fa-house"></i> Feed</button>
+                <button class="nav-btn" id="nav-habits-btn"><i class="fa-solid fa-list-check"></i> Hábitos</button>
+                <button class="nav-btn" id="nav-forum-btn"><i class="fa-solid fa-comments"></i> Fórum</button>
+                <button class="nav-btn" id="nav-profile-btn"><i class="fa-solid fa-user"></i> Meu Perfil</button>
+            </nav>
+
+            <div class="app-header-right">
+                <button class="icon-action-btn theme-toggle-btn" title="Alternar Tema">
+                    <i class="fa-solid fa-sun theme-icon"></i>
+                </button>
+                <div class="user-header-profile" id="user-header-dropdown-btn">
+                    <span class="user-header-name" id="header-username">Carregando...</span>
+                    <i class="fa-solid fa-chevron-down arrow-dropdown"></i>
+                    
+                    <div class="profile-dropdown glass-panel hidden" id="profile-dropdown-menu">
+                        <button class="dropdown-item logout-item" id="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="view-feed" class="view-section fade-in">
+            <div class="create-post-card glass-panel">
+                <h3>Compartilhe uma Ação Sustentável</h3>
+                <form id="create-post-form">
+                    <textarea id="post-content" placeholder="O que você fez pelo meio ambiente hoje?" required></textarea>
+                    
+                    <div class="post-actions-bar">
+                        <div class="file-upload-wrapper">
+                            <label for="post-media" class="upload-btn">
+                                <i class="fa-solid fa-camera"></i> Anexar Foto/Vídeo
+                            </label>
+                            <input type="file" id="post-media" accept="image/*, video/*" hidden>
+                            <span id="file-name-display" class="file-name">Nenhuma mídia selecionada</span>
+                        </div>
+                        <button type="submit" class="btn-primary btn-sm">Publicar <i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="feed-container" class="posts-container"></div>
+        </section>
+
+        <section id="view-habits" class="view-section hidden fade-in">
+            <div class="create-post-card glass-panel" style="margin-bottom: 20px;">
+                <h3 style="color: var(--accent-mint);"><i class="fa-solid fa-list-check"></i> Registro de Hábitos Diários</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-muted);">Marque as ações que você concluiu hoje para acumular pontos de gamificação!</p>
+                <div id="habits-list" style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="habit-btn" onclick="registerHabit('Economia de Água')">Economia de Água (Banhos curtos) <i class="fa-solid fa-droplet"></i></button>
+                    <button class="habit-btn" onclick="registerHabit('Uso de Eco-bag')">Uso de Eco-bag em compras <i class="fa-solid fa-bag-shopping"></i></button>
+                    <button class="habit-btn" onclick="registerHabit('Descarte Reciclável')">Separação de Lixo Reciclável <i class="fa-solid fa-recycle"></i></button>
+                    <button class="habit-btn" onclick="registerHabit('Mobilidade Verde')">Uso de Bicicleta / Transporte Público <i class="fa-solid fa-bicycle"></i></button>
+                </div>
+            </div>
+            <div id="habits-log" class="glass-panel" style="padding: 20px;">
+                <h4><i class="fa-solid fa-clock-rotate-left"></i> Histórico Recente</h4>
+                <div id="habits-log-container" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+        </section>
+
+        <section id="view-forum" class="view-section hidden fade-in">
+            <div class="create-post-card glass-panel" style="margin-bottom: 20px;">
+                <h3 style="color: var(--accent-mint);"><i class="fa-solid fa-comments"></i> Iniciar um Tópico no Fórum</h3>
+                <form id="create-topic-form">
+                    <input type="text" id="topic-title" placeholder="Título do Debate" required style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-primary);">
+                    <textarea id="topic-content" placeholder="Conteúdo da sua discussão..." required rows="3"></textarea>
+                    <button type="submit" class="btn-primary btn-sm" style="margin-top: 10px;">Abrir Tópico <i class="fa-solid fa-bullhorn"></i></button>
+                </form>
+            </div>
+            <h3 class="section-title">Tópicos Recentes</h3>
+            <div id="forum-container" class="posts-container"></div>
+        </section>
+
+        <section id="view-profile" class="view-section hidden fade-in">
+            <div class="profile-info-card glass-panel">
+                <div class="profile-avatar" id="profile-avatar-display"><i class="fa-solid fa-user"></i></div>
+                <h2 id="profile-name-display">Nome do Usuário</h2>
+                <p id="profile-about-display" style="margin-bottom: 10px; font-size: 0.95rem; color: var(--text-primary); font-style: italic;"></p>
+                <p class="profile-date"><i class="fa-solid fa-calendar-days"></i> Membro desde: <span id="profile-join-date">...</span></p>
+
+                <div class="profile-stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-posts">0</span>
+                        <span class="stat-label">Ações</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-followers">0</span>
+                        <span class="stat-label">Seguidores</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-likes">0</span>
+                        <span class="stat-label">Eco-Curtidas</span>
+                    </div>
+                </div>
+                
+                <button id="btn-edit-profile" class="btn-primary btn-sm" style="margin-top: 15px; width: auto; display: inline-block;">
+                    <i class="fa-solid fa-pen"></i> Editar Perfil
+                </button>
+
+                <div id="edit-profile-form" class="hidden" style="margin-top: 25px; text-align: left; border-top: 1px solid var(--glass-border); padding-top: 20px;">
+                    <div class="form-group">
+                        <label for="edit-avatar"><i class="fa-solid fa-camera"></i> Atualizar Foto de Perfil</label>
+                        <input type="file" id="edit-avatar" accept="image/*" style="padding: 9px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-about"><i class="fa-solid fa-address-card"></i> Sobre Mim</label>
+                        <textarea id="edit-about" placeholder="Conte um pouco sobre suas ações e interesses sustentáveis..." rows="3" maxlength="150"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button id="btn-save-profile" class="btn-primary btn-sm" style="flex: 1;">Salvar Alterações</button>
+                        <button id="btn-cancel-edit" class="btn-primary btn-sm" style="flex: 1; background: var(--input-bg); color: var(--text-primary);">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Minhas Publicações</h3>
+            <div id="profile-posts-container" class="posts-container"></div>
+        </section>
+    </main>
+
+    <script src="../js/javascript.js"></script>
+</body>
+</html>
