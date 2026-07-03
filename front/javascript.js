@@ -1,35 +1,33 @@
 const API_URL = 'https://ser-sustentvel-rede-social.onrender.com/auth'; 
+const BASE_URL = 'https://ser-sustentvel-rede-social.onrender.com';
 let currentUser = null;
-let editAvatarBase64 = null;
+let editAvatarFile = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
     setupEventListeners();
 });
 
-// ==========================================
-// PROXY DE IMAGENS (Correção do Erro VARCHAR 255 do Back-end)
-// ==========================================
-// O back-end define caminho_foto como VARCHAR(255). Uma imagem Base64 real passará de milhões de caracteres e quebrará o banco de dados. 
-// Para burlar essa limitação estrutural sem mexer no back-end, salvamos a string enorme no LocalStorage e enviamos apenas uma "chave curta" pro BD.
-function salvarImagemProxyLocal(base64Str) {
-    if (!base64Str) return "";
-    const imgKey = 'localimg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+async function uploadArquivoParaBackend(file) {
+    if (!file) return "";
+    const formData = new FormData();
+    formData.append("file", file);
+
     try {
-        localStorage.setItem(imgKey, base64Str);
-        return imgKey;
+        const res = await fetch(`${API_URL}/upload`, {
+            method: "POST",
+            body: formData
+        });
+        
+        if (!res.ok) throw new Error("Falha no upload");
+        
+        const data = await res.json();
+        return data.url; 
     } catch (e) {
-        showToast('A imagem é grande demais para ser armazenada.', 'error');
+        showToast('Erro ao enviar a imagem para o servidor.', 'error');
         return "";
     }
 }
-function recuperarImagemProxyLocal(dbString) {
-    if (dbString && dbString.startsWith('localimg_')) {
-        return localStorage.getItem(dbString) || "";
-    }
-    return dbString; 
-}
-
 
 function initApp() {
     const savedSession = sessionStorage.getItem('ser_sustentavel_session');
@@ -103,16 +101,15 @@ async function prepararAbaPerfil() {
     }
 
     const avatarEl = document.getElementById('profile-avatar-display');
-    const avatarData = recuperarImagemProxyLocal(currentUser.avatar);
-    if (avatarData) {
-        avatarEl.innerHTML = `<img src="${avatarData}" alt="Foto de perfil">`;
+    if (currentUser.avatar) {
+        const avatarUrl = currentUser.avatar.startsWith('http') ? currentUser.avatar : `${BASE_URL}${currentUser.avatar}`;
+        avatarEl.innerHTML = `<img src="${avatarUrl}" alt="Foto de perfil">`;
     } else {
         avatarEl.innerHTML = `<i class="fa-solid fa-user"></i>`;
     }
 
     renderFeed('profile-posts-container', true);
     
-    // FETCH REAL DAS ESTATÍSTICAS DA ROTA DO BACK-END (Correção de Inconsistência)
     const token = sessionStorage.getItem('token_jwt');
     try {
         const response = await fetch(`${API_URL}/perfil?token=${token}`);
@@ -157,7 +154,7 @@ function setupEventListeners() {
         document.getElementById('edit-profile-form').classList.remove('hidden');
         document.getElementById('btn-edit-profile').classList.add('hidden');
         document.getElementById('edit-about').value = currentUser.sobre_mim || '';
-        editAvatarBase64 = currentUser.avatar; 
+        editAvatarFile = null;
     });
 
     document.getElementById('btn-cancel-edit').addEventListener('click', () => {
@@ -169,31 +166,29 @@ function setupEventListeners() {
         const file = e.target.files[0];
         if (!file) return;
         if (!file.type.startsWith('image/')) return showToast('Apenas arquivos de imagem.', 'error');
-        const reader = new FileReader();
-        reader.onload = (event) => { editAvatarBase64 = event.target.result; };
-        reader.readAsDataURL(file);
+        editAvatarFile = file;
     });
 
     document.getElementById('btn-save-profile').addEventListener('click', handleEditProfileSave);
-    
-    // Form do Fórum Simulado
     document.getElementById('create-topic-form').addEventListener('submit', handleCreateForumTopic);
 }
 
 async function handleEditProfileSave() {
     const novoSobreMim = document.getElementById('edit-about').value.trim();
-    
-    // Evita enviar string enorme e quebrar o DB. Se tiver avatar novo, cria proxy local.
-    let proxyAvatarDb = editAvatarBase64; 
-    if(editAvatarBase64 && editAvatarBase64.startsWith('data:image')) {
-        proxyAvatarDb = salvarImagemProxyLocal(editAvatarBase64);
+    let caminhoAvatar = currentUser.avatar;
+
+    if (editAvatarFile) {
+        const urlUpload = await uploadArquivoParaBackend(editAvatarFile);
+        if (urlUpload) {
+            caminhoAvatar = urlUpload;
+        }
     }
     
     currentUser.sobre_mim = novoSobreMim;
-    currentUser.avatar = proxyAvatarDb;
+    currentUser.avatar = caminhoAvatar;
     sessionStorage.setItem('ser_sustentavel_session', JSON.stringify(currentUser));
     
-    showToast('Perfil atualizado (dados salvos localmente)!', 'success');
+    showToast('Perfil atualizado!', 'success');
     switchAppView('view-profile'); 
 }
 
@@ -228,9 +223,6 @@ function calcularIdade(dataNascimento) {
     return idade;
 }
 
-// ----------------------------------------------------
-// INTEGRAÇÕES FAST API AUTH & FEED
-// ----------------------------------------------------
 async function handleRegister(e) {
     e.preventDefault();
     const nome = document.getElementById('reg-name').value.trim();
@@ -296,29 +288,30 @@ async function handleLogout() {
 
 function updateHeader() { if(currentUser) document.getElementById('header-username').innerText = currentUser.nome; }
 
-let selectedMediaBase64 = null;
+let selectedFile = null;
 function handleFileSelect(e) {
     const file = e.target.files[0];
     const display = document.getElementById('file-name-display');
     if (!file) {
         display.innerText = "Nenhuma mídia selecionada";
-        selectedMediaBase64 = null;
+        selectedFile = null;
         return;
     }
     display.innerText = file.name;
-    const reader = new FileReader();
-    reader.onload = (event) => { selectedMediaBase64 = event.target.result; };
-    reader.readAsDataURL(file);
+    selectedFile = file;
 }
 
 async function handleCreatePost(e) {
     e.preventDefault();
     const content = document.getElementById('post-content').value.trim();
     const token = sessionStorage.getItem('token_jwt');
-    if (!content && !selectedMediaBase64) return showToast('A publicação não pode estar vazia.', 'error');
+    if (!content && !selectedFile) return showToast('A publicação não pode estar vazia.', 'error');
 
-    // Usa a chave de proxy da imagem para salvar no banco corretamente
-    const caminho_seguro_db = salvarImagemProxyLocal(selectedMediaBase64);
+    let caminho_seguro_db = "";
+    if (selectedFile) {
+        caminho_seguro_db = await uploadArquivoParaBackend(selectedFile);
+        if (!caminho_seguro_db) return;
+    }
 
     try {
         const response = await fetch(`${API_URL}/postar?token=${token}`, {
@@ -331,7 +324,7 @@ async function handleCreatePost(e) {
             showToast('Ação ecológica publicada! 🌿', 'success');
             document.getElementById('create-post-form').reset();
             document.getElementById('file-name-display').innerText = "Nenhuma mídia selecionada";
-            selectedMediaBase64 = null;
+            selectedFile = null;
             renderFeed('feed-container', false);
         } else {
             const err = await response.json(); showToast(err.detail, 'error');
@@ -359,18 +352,16 @@ async function renderFeed(containerId, apenasUsuarioLogado) {
             const card = document.createElement('article');
             card.className = 'post-card glass-panel fade-in';
             
-            // Restaura o Base64 enorme pegando pelo Proxy Local ID
-            const imagemRealBase64 = recuperarImagemProxyLocal(post.caminho_foto);
             let mediaHtml = '';
-            if (imagemRealBase64 && imagemRealBase64.length > 10) {
-                mediaHtml = `<div class="post-media-container"><img src="${imagemRealBase64}" alt="Mídia da postagem"></div>`;
+            if (post.caminho_foto && post.caminho_foto.length > 5) {
+                const urlCompleta = post.caminho_foto.startsWith('http') ? post.caminho_foto : `${BASE_URL}${post.caminho_foto}`;
+                mediaHtml = `<div class="post-media-container"><img src="${urlCompleta}" alt="Mídia da postagem"></div>`;
             }
 
-            // Checagem de Follow (Simulada no Local Storage)
             const isMe = post.autor === currentUser.nome;
             const amIFollowing = listaSeguindo.includes(post.autor);
             const followBtnHtml = isMe ? '' : `<button class="btn-follow ${amIFollowing ? 'following' : ''}" onclick="toggleFollow('${post.autor}')">${amIFollowing ? '<i class="fa-solid fa-check"></i> Seguindo' : 'Seguir'}</button>`;
-            const deleteBtn = isMe ? `<button class="btn-delete-post" onclick="deletePost(${post.id_postagem})" title="Excluir"><i class="fa-solid fa-trash"></i></button>` : '';
+            const deleteBtn = isMe ? `<button class="btn-delete-post" onclick="abrirModalDeletar(${post.id_postagem})" title="Excluir"><i class="fa-solid fa-trash"></i></button>` : '';
 
             let commentsHtml = '';
             post.comentarios.forEach(com => {
@@ -414,18 +405,36 @@ async function renderFeed(containerId, apenasUsuarioLogado) {
     } catch (error) { container.innerHTML = `<p style="color: var(--danger)">Erro ao carregar o feed.</p>`; }
 }
 
-window.deletePost = async function(idPublicacao) {
-    if (!confirm('Deseja realmente apagar esta publicação?')) return;
+let postParaDeletar = null;
+
+window.abrirModalDeletar = function(idPublicacao) {
+    postParaDeletar = idPublicacao;
+    document.getElementById('delete-modal').classList.remove('hidden');
+};
+
+window.fecharModalDeletar = function() {
+    postParaDeletar = null;
+    document.getElementById('delete-modal').classList.add('hidden');
+};
+
+document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
+    if (!postParaDeletar) return;
+    
     const token = sessionStorage.getItem('token_jwt');
     try {
-        const response = await fetch(`${API_URL}/postar/${idPublicacao}?token=${token}`, { method: 'DELETE' });
+        const response = await fetch(`${API_URL}/postar/${postParaDeletar}?token=${token}`, { method: 'DELETE' });
         if (response.ok) {
             showToast('Publicação excluída!', 'success');
+            fecharModalDeletar();
             const isProfileActive = document.getElementById('nav-profile-btn').classList.contains('active');
             renderFeed(isProfileActive ? 'profile-posts-container' : 'feed-container', isProfileActive);
         }
-    } catch (error) { showToast('Erro de conexão.', 'error'); }
-};
+    } catch (error) { 
+        showToast('Erro de conexão.', 'error');
+        fecharModalDeletar();
+    }
+});
+
 
 window.toggleLike = async function(idPublicacao) {
     const token = sessionStorage.getItem('token_jwt');
@@ -459,10 +468,8 @@ window.addComment = async function(idPublicacao) {
     } catch (error) { showToast('Erro de conexão.', 'error'); }
 };
 
-// Correção do Data parser 
 function formatarData(isoString, comHora = false) {
     if (!isoString) return '';
-    // Proteção: Se a API já devolveu a data formatada e com barras, retorne a própria string.
     if (typeof isoString === 'string' && isoString.includes('/')) return isoString; 
 
     const data = new Date(isoString);
@@ -484,12 +491,6 @@ function showToast(message, type = 'success') {
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
-
-// ==========================================
-// MÓDULOS DE REQUISITOS ADICIONAIS (Simulados Localmente)
-// ==========================================
-
-// --- SEGUIDORES ---
 let listaSeguindo = [];
 function atualizarListaSeguidores() {
     const dbSeguidores = JSON.parse(localStorage.getItem('serSustentavel_seguidores') || '{}');
@@ -517,7 +518,6 @@ window.toggleFollow = function(nomeAutor) {
     renderFeed('feed-container', false);
 }
 
-// --- HÁBITOS ---
 window.registerHabit = function(nomeHabito) {
     const dbHabitos = JSON.parse(localStorage.getItem('serSustentavel_habitos') || '[]');
     dbHabitos.unshift({ id_usuario: currentUser.id_usuario, habito: nomeHabito, data: new Date().toISOString() });
@@ -529,7 +529,7 @@ window.registerHabit = function(nomeHabito) {
 function renderHabitsLog() {
     const container = document.getElementById('habits-log-container');
     const dbHabitos = JSON.parse(localStorage.getItem('serSustentavel_habitos') || '[]');
-    const meusHabitos = dbHabitos.filter(h => h.id_usuario === currentUser.id_usuario).slice(0, 5); // ultimos 5
+    const meusHabitos = dbHabitos.filter(h => h.id_usuario === currentUser.id_usuario).slice(0, 5); 
     
     if(meusHabitos.length === 0) {
         container.innerHTML = '<p style="color: var(--text-muted); font-size:0.9rem;">Nenhum hábito registrado recentemente.</p>';
@@ -538,7 +538,6 @@ function renderHabitsLog() {
     container.innerHTML = meusHabitos.map(h => `<div class="habit-log-item"><span>${h.habito}</span> ${formatarData(h.data, true)}</div>`).join('');
 }
 
-// --- FÓRUM ---
 function handleCreateForumTopic(e) {
     e.preventDefault();
     const titulo = document.getElementById('topic-title').value;
