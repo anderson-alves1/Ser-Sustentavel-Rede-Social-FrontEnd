@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/auth'; 
+const API_URL = 'https://ser-sustentvel-rede-social.onrender.com/auth'; 
 let currentUser = null;
 let editAvatarBase64 = null;
 
