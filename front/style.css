@@ -89,28 +89,45 @@ body { background-color: var(--bg-main); color: var(--text-primary); min-height:
 .news-item h4:hover { text-decoration: underline; color: var(--accent-mint);}
 .news-item p { margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
-.app-header { 
-    position: fixed; 
-    top: 20px; 
-    left: 20px; 
-    right: 20px; 
-    max-width: 1410px; 
-    margin: 0 auto; 
-    height: 70px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0 30px; 
-    z-index: 999; 
-    border-radius: 14px; 
-    background: var(--bg-header);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+.app-header {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 1450px;
+    height: 70px;
+    
+    /* CORREÇÃO: Trocamos o Grid por Flexbox para controlar o espaço */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    padding: 0 25px;
+    border-radius: 20px;
+    z-index: 999;
 }
+
 .app-header-left { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
 .app-header-left span span { color: var(--accent-mint); }
 
-.app-nav { display: flex; gap: 10px; }
+.app-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    
+    flex: 1;
+    min-width: 0;
+    
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.app-nav::-webkit-scrollbar {
+    display: none; 
+}
 .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 20px; transition: 0.3s; display: flex; gap: 8px; align-items: center; }
 .nav-btn:hover { color: var(--text-primary); background: var(--input-bg); }
 .nav-btn.active { color: #fff; background: var(--accent-mint); }
@@ -135,7 +152,14 @@ body { background-color: var(--bg-main); color: var(--text-primary); min-height:
 
 .create-post-card { padding: 25px; margin-bottom: 30px; }
 .create-post-card h3 { margin-bottom: 15px; font-size: 1.1rem; }
-.post-actions-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+.post-actions-bar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 15px; 
+    flex-wrap: wrap; 
+    gap: 10px;
+}
 .upload-btn { color: var(--accent-mint); font-weight: 600; cursor: pointer; display: flex; gap: 8px; align-items: center; font-size: 0.95rem; }
 .upload-btn:hover { color: var(--accent-emerald); }
 .file-name { font-size: 0.8rem; color: var(--text-muted); margin-left: 10px; }
