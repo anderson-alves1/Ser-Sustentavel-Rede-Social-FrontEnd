@@ -142,141 +142,104 @@
             </div>
         </header>
 
-        <div class="main-layout-wrapper">
-            
-            <aside class="sidebar-left">
-                <div class="sidebar-widget glass-panel fade-in">
-                    <h3><i class="fa-regular fa-newspaper"></i> Foco no ODS 6</h3>
+        <section id="view-feed" class="view-section fade-in">
+            <div class="create-post-card glass-panel">
+                <h3>Compartilhe uma Ação Sustentável</h3>
+                <form id="create-post-form">
+                    <textarea id="post-content" placeholder="O que você fez pelo meio ambiente hoje?" required></textarea>
                     
-                    <article class="news-item">
-                        <h4>Avanço nas Ecobarreiras</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. A aplicação de ecobarreiras tem reduzido drasticamente os resíduos sólidos nos rios da nossa região.</p>
-                    </article>
-                    
-                    <article class="news-item">
-                        <h4>Saneamento Limpo</h4>
-                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada. Curabitur vitae purus risus. Soluções inovadoras ganham destaque.</p>
-                    </article>
+                    <div class="post-actions-bar">
+                        <div class="file-upload-wrapper">
+                            <label for="post-media" class="upload-btn">
+                                <i class="fa-solid fa-camera"></i> Anexar Foto/Vídeo
+                            </label>
+                            <input type="file" id="post-media" accept="image/*, video/*" hidden>
+                            <span id="file-name-display" class="file-name">Nenhuma mídia selecionada</span>
+                        </div>
+                        <button type="submit" class="btn-primary btn-sm">Publicar <i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="feed-container" class="posts-container"></div>
+        </section>
+
+        <section id="view-habits" class="view-section hidden fade-in">
+            <div class="create-post-card glass-panel" style="margin-bottom: 20px;">
+                <h3 style="color: var(--accent-mint);"><i class="fa-solid fa-list-check"></i> Registro de Hábitos Diários</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-muted);">Marque as ações que você concluiu hoje para acumular pontos de gamificação!</p>
+                <div id="habits-list" style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="habit-btn" onclick="registerHabit('Economia de Água')">Economia de Água (Banhos curtos) <i class="fa-solid fa-droplet"></i></button>
+                    <button class="habit-btn" onclick="registerHabit('Uso de Eco-bag')">Uso de Eco-bag em compras <i class="fa-solid fa-bag-shopping"></i></button>
+                    <button class="habit-btn" onclick="registerHabit('Descarte Reciclável')">Separação de Lixo Reciclável <i class="fa-solid fa-recycle"></i></button>
+                    <button class="habit-btn" onclick="registerHabit('Mobilidade Verde')">Uso de Bicicleta / Transporte Público <i class="fa-solid fa-bicycle"></i></button>
                 </div>
-            </aside>
+            </div>
+            <div id="habits-log" class="glass-panel" style="padding: 20px;">
+                <h4><i class="fa-solid fa-clock-rotate-left"></i> Histórico Recente</h4>
+                <div id="habits-log-container" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+        </section>
 
-            <div class="central-content-area">
-                
-                <section id="view-feed" class="view-section fade-in">
-                    <div class="create-post-card glass-panel">
-                        <h3>Compartilhe uma Ação Sustentável</h3>
-                        <form id="create-post-form">
-                            <textarea id="post-content" placeholder="O que você fez pelo meio ambiente hoje?" required></textarea>
-                            
-                            <div class="post-actions-bar">
-                                <div class="file-upload-wrapper">
-                                    <label for="post-media" class="upload-btn">
-                                        <i class="fa-solid fa-camera"></i> Anexar Foto/Vídeo
-                                    </label>
-                                    <input type="file" id="post-media" accept="image/*, video/*" hidden>
-                                    <span id="file-name-display" class="file-name">Nenhuma mídia selecionada</span>
-                                </div>
-                                <button type="submit" class="btn-primary btn-sm">Publicar <i class="fa-solid fa-paper-plane"></i></button>
-                            </div>
-                        </form>
+        <section id="view-forum" class="view-section hidden fade-in">
+            <div class="create-post-card glass-panel" style="margin-bottom: 20px;">
+                <h3 style="color: var(--accent-mint);"><i class="fa-solid fa-comments"></i> Iniciar um Tópico no Fórum</h3>
+                <form id="create-topic-form">
+                    <input type="text" id="topic-title" placeholder="Título do Debate" required style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-primary);">
+                    <textarea id="topic-content" placeholder="Conteúdo da sua discussão..." required rows="3"></textarea>
+                    <button type="submit" class="btn-primary btn-sm" style="margin-top: 10px;">Abrir Tópico <i class="fa-solid fa-bullhorn"></i></button>
+                </form>
+            </div>
+            <h3 class="section-title">Tópicos Recentes</h3>
+            <div id="forum-container" class="posts-container"></div>
+        </section>
+
+        <section id="view-profile" class="view-section hidden fade-in">
+            <div class="profile-info-card glass-panel">
+                <div class="profile-avatar" id="profile-avatar-display"><i class="fa-solid fa-user"></i></div>
+                <h2 id="profile-name-display">Nome do Usuário</h2>
+                <p id="profile-about-display" style="margin-bottom: 10px; font-size: 0.95rem; color: var(--text-primary); font-style: italic;"></p>
+                <p class="profile-date"><i class="fa-solid fa-calendar-days"></i> Membro desde: <span id="profile-join-date">...</span></p>
+
+                <div class="profile-stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-posts">0</span>
+                        <span class="stat-label">Ações</span>
                     </div>
-
-                    <div id="feed-container" class="posts-container"></div>
-                </section>
-
-                <section id="view-habits" class="view-section hidden fade-in">
-                    <div class="create-post-card glass-panel" style="margin-bottom: 20px;">
-                        <h3 style="color: var(--accent-mint);"><i class="fa-solid fa-list-check"></i> Registro de Hábitos Diários</h3>
-                        <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-muted);">Marque as ações que você concluiu hoje para acumular pontos de gamificação!</p>
-                        <div id="habits-list" style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="habit-btn" onclick="registerHabit('Economia de Água')">Economia de Água (Banhos curtos) <i class="fa-solid fa-droplet"></i></button>
-                            <button class="habit-btn" onclick="registerHabit('Uso de Eco-bag')">Uso de Eco-bag em compras <i class="fa-solid fa-bag-shopping"></i></button>
-                            <button class="habit-btn" onclick="registerHabit('Descarte Reciclável')">Separação de Lixo Reciclável <i class="fa-solid fa-recycle"></i></button>
-                            <button class="habit-btn" onclick="registerHabit('Mobilidade Verde')">Uso de Bicicleta / Transporte Público <i class="fa-solid fa-bicycle"></i></button>
-                        </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-followers">0</span>
+                        <span class="stat-label">Seguidores</span>
                     </div>
-                    <div id="habits-log" class="glass-panel" style="padding: 20px;">
-                        <h4><i class="fa-solid fa-clock-rotate-left"></i> Histórico Recente</h4>
-                        <div id="habits-log-container" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;"></div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-likes">0</span>
+                        <span class="stat-label">Eco-Curtidas</span>
                     </div>
-                </section>
-
-                <section id="view-forum" class="view-section hidden fade-in">
-                    <div class="create-post-card glass-panel" style="margin-bottom: 20px;">
-                        <h3 style="color: var(--accent-mint);"><i class="fa-solid fa-comments"></i> Iniciar um Tópico no Fórum</h3>
-                        <form id="create-topic-form">
-                            <input type="text" id="topic-title" placeholder="Título do Debate" required style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-primary);">
-                            <textarea id="topic-content" placeholder="Conteúdo da sua discussão..." required rows="3"></textarea>
-                            <button type="submit" class="btn-primary btn-sm" style="margin-top: 10px;">Abrir Tópico <i class="fa-solid fa-bullhorn"></i></button>
-                        </form>
-                    </div>
-                    <h3 class="section-title">Tópicos Recentes</h3>
-                    <div id="forum-container" class="posts-container"></div>
-                </section>
-
-                <section id="view-profile" class="view-section hidden fade-in">
-                    <div class="profile-info-card glass-panel">
-                        <div class="profile-avatar" id="profile-avatar-display"><i class="fa-solid fa-user"></i></div>
-                        <h2 id="profile-name-display">Nome do Usuário</h2>
-                        <p id="profile-about-display" style="margin-bottom: 10px; font-size: 0.95rem; color: var(--text-primary); font-style: italic;"></p>
-                        <p class="profile-date"><i class="fa-solid fa-calendar-days"></i> Membro desde: <span id="profile-join-date">...</span></p>
-
-                        <div class="profile-stats-grid">
-                            <div class="stat-box">
-                                <span class="stat-number" id="stat-posts">0</span>
-                                <span class="stat-label">Ações</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number" id="stat-followers">0</span>
-                                <span class="stat-label">Seguidores</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number" id="stat-likes">0</span>
-                                <span class="stat-label">Eco-Curtidas</span>
-                            </div>
-                        </div>
-                        
-                        <button id="btn-edit-profile" class="btn-primary btn-sm" style="margin-top: 15px; width: auto; display: inline-block;">
-                            <i class="fa-solid fa-pen"></i> Editar Perfil
-                        </button>
-
-                        <div id="edit-profile-form" class="hidden" style="margin-top: 25px; text-align: left; border-top: 1px solid var(--glass-border); padding-top: 20px;">
-                            <div class="form-group">
-                                <label for="edit-avatar"><i class="fa-solid fa-camera"></i> Atualizar Foto de Perfil</label>
-                                <input type="file" id="edit-avatar" accept="image/*" style="padding: 9px;">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit-about"><i class="fa-solid fa-address-card"></i> Sobre Mim</label>
-                                <textarea id="edit-about" placeholder="Conte um pouco sobre suas ações e interesses sustentáveis..." rows="3" maxlength="150"></textarea>
-                            </div>
-                            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                                <button id="btn-save-profile" class="btn-primary btn-sm" style="flex: 1;">Salvar Alterações</button>
-                                <button id="btn-cancel-edit" class="btn-primary btn-sm" style="flex: 1; background: var(--input-bg); color: var(--text-primary);">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h3 class="section-title">Minhas Publicações</h3>
-                    <div id="profile-posts-container" class="posts-container"></div>
-                </section>
-                
-            </div> <aside class="sidebar-right">
-                <div class="sidebar-widget glass-panel fade-in">
-                    <h3><i class="fa-solid fa-fire"></i> Destaques da Comunidade</h3>
-                    
-                    <article class="news-item">
-                        <h4>Ação Climática Local</h4>
-                        <p>Lorem ipsum dolor sit amet. Membros discutem soluções práticas de reaproveitamento de água da chuva.</p>
-                    </article>
-
-                    <article class="news-item">
-                        <h4>Dicas de Reciclagem</h4>
-                        <p>Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
-                    </article>
                 </div>
-            </aside>
+                
+                <button id="btn-edit-profile" class="btn-primary btn-sm" style="margin-top: 15px; width: auto; display: inline-block;">
+                    <i class="fa-solid fa-pen"></i> Editar Perfil
+                </button>
 
-        </div> </main>
+                <div id="edit-profile-form" class="hidden" style="margin-top: 25px; text-align: left; border-top: 1px solid var(--glass-border); padding-top: 20px;">
+                    <div class="form-group">
+                        <label for="edit-avatar"><i class="fa-solid fa-camera"></i> Atualizar Foto de Perfil</label>
+                        <input type="file" id="edit-avatar" accept="image/*" style="padding: 9px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-about"><i class="fa-solid fa-address-card"></i> Sobre Mim</label>
+                        <textarea id="edit-about" placeholder="Conte um pouco sobre suas ações e interesses sustentáveis..." rows="3" maxlength="150"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button id="btn-save-profile" class="btn-primary btn-sm" style="flex: 1;">Salvar Alterações</button>
+                        <button id="btn-cancel-edit" class="btn-primary btn-sm" style="flex: 1; background: var(--input-bg); color: var(--text-primary);">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Minhas Publicações</h3>
+            <div id="profile-posts-container" class="posts-container"></div>
+        </section>
+    </main>
 
     <div id="delete-modal" class="modal-overlay hidden">
         <div class="modal-box fade-in">
