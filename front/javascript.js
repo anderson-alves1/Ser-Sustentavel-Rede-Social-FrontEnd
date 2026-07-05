@@ -1,5 +1,5 @@
-const API_URL = 'https://ser-sustentavel-rede-social.onrender.com/auth';
-const BASE_URL = 'https://ser-sustentavel-rede-social.onrender.com';
+const API_URL = 'https://ser-sustentvel-rede-social.onrender.com.com/auth';
+const BASE_URL = 'https://ser-sustentvel-rede-social.onrender.com';
 let currentUser = null;
 let editAvatarFile = null;
 let topicoAtualId = null;  // ID do tópico do fórum aberto
