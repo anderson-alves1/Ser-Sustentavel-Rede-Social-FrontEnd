@@ -82,26 +82,6 @@ function switchAppView(viewId) {
         carregarTopicos();
     }
 }
-function ajustarEspacoDoHeader() {
-    const header = document.querySelector('.app-header');
-    const wrapper = document.querySelector('.main-layout-wrapper');
-    if (header && wrapper) {
-        const alturaReal = header.offsetHeight;
-        wrapper.style.marginTop = (20 + alturaReal + 20) + 'px';
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', ajustarEspacoDoHeader);
-
-window.addEventListener('resize', ajustarEspacoDoHeader);
-
-
-const headerElement = document.querySelector('.app-header');
-if (headerElement && window.ResizeObserver) {
-    const observer = new ResizeObserver(ajustarEspacoDoHeader);
-    observer.observe(headerElement);
-}
 
 // ═══════════════════════════════════════════
 // PERFIL
