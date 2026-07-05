@@ -82,6 +82,18 @@ function switchAppView(viewId) {
         carregarTopicos();
     }
 }
+function ajustarEspacoDoHeader() {
+    const header = document.querySelector('.app-header');
+    const wrapper = document.querySelector('.main-layout-wrapper');
+    if (header && wrapper) {
+        const alturaReal = header.getBoundingClientRect().height;
+        const topoHeader = header.getBoundingClientRect().top;
+        wrapper.style.marginTop = (topoHeader + alturaReal + 20) + 'px';
+    }
+}
+
+window.addEventListener('load', ajustarEspacoDoHeader);
+window.addEventListener('resize', ajustarEspacoDoHeader);
 
 // ═══════════════════════════════════════════
 // PERFIL
