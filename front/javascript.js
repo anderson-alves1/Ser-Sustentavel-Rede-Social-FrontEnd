@@ -1,4 +1,4 @@
-const API_URL = 'https://ser-sustentvel-rede-social.onrender.com.com/auth';
+const API_URL = 'https://ser-sustentvel-rede-social.onrender.com/auth';
 const BASE_URL = 'https://ser-sustentvel-rede-social.onrender.com';
 let currentUser = null;
 let editAvatarFile = null;
